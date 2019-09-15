@@ -1,20 +1,15 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 
-import * as os from 'os'
-import * as path from 'path'
-
-// Store information about the environment
-const osPlat = os.platform() // possible values: win32 (Windows), linux (Linux), darwin (macOS)
-core.debug(`platform: ${osPlat}`)
-
 async function run() {
     try {
         const codecov = core.getInput('codecov')
         const coveralls = core.getInput('coveralls')
 
-        // Test if Julia has been installed by showing versioninfo()
+        // Run Pkg.build
         await exec.exec('julia', ['--color=yes', '--project', '-e', 'using Pkg; if VERSION >= v\"1.1.0-rc1\"; Pkg.build(verbose=true); else Pkg.build(); end'])
+
+        // Run Pkg.test
         await exec.exec('julia', ['--color=yes', '--check-bounds=yes', '--project', '-e', 'using Pkg; Pkg.test(coverage=true)'])
 
         // if(codecov=='true') {
