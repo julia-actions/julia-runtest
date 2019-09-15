@@ -2,7 +2,7 @@
   "name": "julia-runtest",
   "version": "0.1.0",
   "private": true,
-  "description": "JavaScript template action",
+  "description": "Julia package test run action",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -10,12 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/javascript-template.git"
+    "url": "git+https://github.com/julia-actions/julia-runtest.git"
   },
   "keywords": [
     "actions",
-    "node",
-    "setup"
+    "julia"
   ],
   "author": "David Anthoff",
   "license": "MIT",
