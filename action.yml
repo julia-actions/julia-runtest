@@ -1,10 +1,15 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Run Julia package tests'
+description: 'Run the tests in a Julia package'
+author: 'David Anthoff'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  codecov:
+    description: 'Coverage results upload to codecov.'
+    required: false
+    default: 'true'
+  coveralls:
+    description: 'Coverage results upload to coveralls.'
+    required: false
+    default: 'true'
 runs:
   using: 'node12'
   main: 'lib/main.js'
