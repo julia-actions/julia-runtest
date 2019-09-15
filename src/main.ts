@@ -12,9 +12,10 @@ async function run() {
         // Run Pkg.test
         await exec.exec('julia', ['--color=yes', '--check-bounds=yes', '--project', '-e', 'using Pkg; Pkg.test(coverage=true)'])
 
-        // if(codecov=='true') {
-        //     await exec.exec('julia', ['--color=yes', '-e', 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'])
-        // }
+        if(codecov=='true') {
+            // await exec.exec('julia', ['--color=yes', '-e', 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'])
+            await exec.exec('julia', ['--color=yes', '-e', 'using Pkg; Pkg.add(PkgSpec(url="https://github.com/davidanthoff/Coverage.jl.git", rev="githubactions")); using Coverage; Codecov.submit(process_folder())'])
+        }
 
         // if(coveralls=='true') {
         //     await exec.exec('julia', ['--color=yes', '-e', 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'])
