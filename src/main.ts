@@ -18,7 +18,8 @@ async function run() {
         }
 
         if(coveralls=='true') {
-            await exec.exec('julia', ['--color=yes', '-e', 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'])
+            // await exec.exec('julia', ['--color=yes', '-e', 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'])
+            await exec.exec('julia', ['--color=yes', '-e', 'using Pkg; Pkg.add(PackageSpec(url="https://github.com/davidanthoff/Coverage.jl.git", rev="githubactions")); using Coverage; Coveralls.submit(process_folder())'])
         }
     } catch (error) {
         core.setFailed(error.message)
