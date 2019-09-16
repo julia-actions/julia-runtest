@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1.0.0
-      - uses: julia-actions/setup-julia@v0.2
+      - uses: julia-actions/setup-julia@latest
         with:
           version: ${{ matrix.julia-version }}
       - uses: julia-actions/julia-runtest@master
