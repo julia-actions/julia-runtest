@@ -1,14 +1,10 @@
 # julia-runtest Action
 
-This action runs the tests in a Julia package and uploads coverage results to [Coveralls](https://coveralls.io/) and [Codecov](https://codecov.io/).
+This action runs the tests in a Julia package.
 
 ## Usage
 
 Julia needs to be installed before this action can run. This can easily be achieved with the [setup-julia](https://github.com/marketplace/actions/setup-julia-environment) action.
-
-This action accepts two inpus: `codecov` (with values `true` or `false`) and `coveralls` (with values `true` or `false`). These inputs control whether coverage results are automatically uploaded to the respective service. Both inputs have a default value of `true`.
-
-Uploads to [Coveralls](https://coveralls.io/) or [Codecov](https://codecov.io/) only work if an upload token for the respective service is stored as a Github Actions secret and made available to the action. These tokens need to be stored in the environment variables `CODECOV_TOKEN` and `COVERALLS_TOKEN`.
 
 And example workflow that uses this action might look like this:
 
@@ -35,7 +31,4 @@ jobs:
         with:
           version: ${{ matrix.julia-version }}
       - uses: julia-actions/julia-runtest@master
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
 ```
