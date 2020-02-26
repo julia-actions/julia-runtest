@@ -1,6 +1,10 @@
 name: 'Run Julia package tests'
 description: 'Run the tests in a Julia package'
 author: 'David Anthoff'
+inputs:
+  inline:
+    description: 'Value passed to the --inline flag. Options: yes | no. Default value: yes.'
+    default: 'yes'
 runs:
   using: 'node12'
   main: 'lib/main.js'
