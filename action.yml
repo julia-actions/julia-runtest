@@ -2,6 +2,10 @@ name: 'Run Julia package tests'
 description: 'Run the tests in a Julia package'
 author: 'David Anthoff'
 
+branding:
+  icon: 'aperture'
+  color: 'gray-dark'
+
 inputs:
   inline:
     description: 'Value passed to the --inline flag. Options: yes | no. Default value: yes.'
