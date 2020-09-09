@@ -14,5 +14,17 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    # Occasionally, there are rather large delays (> a few hours)
+    # between the time a pacakge is registered in General and
+    # propagated to pkg.julialang.org.  We can avoid this by manually
+    # cloning ~/.julia/registries/General/ in Julia 1.5 and later.
+    # See:
+    # * https://github.com/JuliaLang/Pkg.jl/issues/2011
+    # * https://github.com/JuliaRegistries/General/issues/16777
+    # * https://github.com/JuliaPackaging/PkgServer.jl/issues/60
+    - run: julia --color=yes -e 'using Pkg; VERSION >= v"1.5-" && !isdir(joinpath(DEPOT_PATH[1], "registries", "General")) && Pkg.Registry.add("General")'
+      shell: bash
+      env:
+        JULIA_PKG_SERVER: ""
     - run: julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --project -e 'using Pkg; Pkg.test(coverage=true)'
       shell: bash
