@@ -15,7 +15,7 @@ runs:
   using: 'composite'
   steps:
     # Occasionally, there are rather large delays (> a few hours)
-    # between the time a pacakge is registered in General and
+    # between the time a package is registered in General and
     # propagated to pkg.julialang.org.  We can avoid this by manually
     # cloning ~/.julia/registries/General/ in Julia 1.5 and later.
     # See:
