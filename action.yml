@@ -11,7 +11,7 @@ inputs:
     description: 'Value passed to the --inline flag. Options: yes | no. Default value: yes.'
     default: 'yes'
   coverage:
-    description: 'Value determining wether to test with coverage or not. Options: true | false. Default value: true.'
+    description: 'Value determining whether to test with coverage or not. Options: true | false. Default value: true.'
     default: 'true'
 
 runs:
