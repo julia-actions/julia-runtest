@@ -13,6 +13,9 @@ inputs:
   coverage:
     description: 'Value determining whether to test with coverage or not. Options: true | false. Default value: true.'
     default: 'true'
+  depwarn:
+    description: 'Value passed to the --depwarn flag. Options: yes | no | error. Default value: yes.'
+    default: 'yes'
 
 runs:
   using: 'composite'
@@ -33,5 +36,5 @@ runs:
         # the request metadata to pkg.julialang.org when installing
         # packages via `Pkg.test`.
         JULIA_PKG_SERVER: ""
-    - run: julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --project -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})'
+    - run: julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})'
       shell: bash
