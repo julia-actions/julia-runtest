@@ -17,7 +17,7 @@ inputs:
     description: 'Value passed to the --depwarn flag. Options: yes | no | error. Default value: yes.'
     default: 'yes'
   project:
-    description: 'Value passed to the --project flag. The default value is the repository root: "@."
+    description: 'Value passed to the --project flag. The default value is the repository root: "@."'
     default: '@.'
 
 runs:
