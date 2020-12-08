@@ -19,9 +19,6 @@ inputs:
   project:
     description: 'Value passed to the --project flag. The default value is the repository root: "@."'
     default: '@.'
-  prefix:
-    description: 'Value inserted in front of the julia command.'
-    required: false
 
 runs:
   using: 'composite'
@@ -42,9 +39,5 @@ runs:
         # the request metadata to pkg.julialang.org when installing
         # packages via `Pkg.test`.
         JULIA_PKG_SERVER: ""
-    - run: |
-        prefix="${{ inputs.prefix }}"
-        [[ -z $prefix ]] && prefix="$prefix "
-        
-        "$prefix"julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})'
+    - run: julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})'
       shell: bash
