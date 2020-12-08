@@ -15,8 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - 1.0
-          - 1 # automatically expands to the latest stable 1.x release of Julia
+          - "1.0"
+          - "1" # automatically expands to the latest stable 1.x release of Julia
           - nightly
         os:
           - ubuntu-latest
@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: julia-actions/Example.jl
-      
+
       - name: Verify that test output file does not exist yet
         run: test ! -f "$HOME/julia-runtest"
         shell: bash
