@@ -35,6 +35,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: julia-actions/Example.jl
+      
+      - name: Verify that test output file does not exist yet
+        run: test ! "$HOME/julia-runtest"
+        shell: bash
 
       - name: Checkout julia-runtest
         uses: actions/checkout@v2
