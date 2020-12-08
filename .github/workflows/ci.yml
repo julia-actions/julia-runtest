@@ -37,7 +37,7 @@ jobs:
           repository: julia-actions/Example.jl
       
       - name: Verify that test output file does not exist yet
-        run: test ! "$HOME/julia-runtest"
+        run: test ! -f "$HOME/julia-runtest"
         shell: bash
 
       - name: Checkout julia-runtest
@@ -72,5 +72,5 @@ jobs:
           file: lcov.info
 
       - name: Verify that test output file exists
-        run: test "$HOME/julia-runtest"
+        run: test -f "$HOME/julia-runtest"
         shell: bash
