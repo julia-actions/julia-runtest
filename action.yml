@@ -44,7 +44,7 @@ runs:
         JULIA_PKG_SERVER: ""
     - run: |
         prefix="${{ inputs.prefix }}"
-        [[ -z $prefix ]] && prefix="$prefix "
+        [[ -n $prefix ]] && prefix="$prefix "
 
         "$prefix"julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})'
       shell: bash
