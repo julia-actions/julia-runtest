@@ -39,7 +39,7 @@ jobs:
       - name: Checkout julia-runtest
         uses: actions/checkout@v2
         with:
-          path: ./github/actions/julia-runtest
+          path: ./github/actions/
 
       - uses: julia-actions/setup-julia@v1
         with:
@@ -59,7 +59,7 @@ jobs:
 
       - uses: julia-actions/julia-buildpkg@v1
 
-      - uses: ./.github/actions/julia-runtest
+      - uses: ./.github/actions/julia-actions/julia-runtest
 
       - uses: julia-actions/julia-processcoverage@v1
 
