@@ -20,7 +20,7 @@ inputs:
     description: 'Value passed to the --project flag. The default value is the repository root: "@."'
     default: '@.'
   prefix:
-    description: 'Value inserted in front of the julia command.'
+    description: 'Value inserted in front of the julia command, e.g. for running xvfb-run julia [...]'
     required: false
 
 runs:
@@ -45,6 +45,6 @@ runs:
     - run: |
         prefix="${{ inputs.prefix }}"
         [[ -z $prefix ]] && prefix="$prefix "
-        
+
         "$prefix"julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})'
       shell: bash
