@@ -5,7 +5,13 @@ on:
     branches:
       - "main"
       - "master"
+    paths-ignore:
+      - "README.md"
+      - "LICENCSE"
   pull_request:
+    paths-ignore:
+      - "README.md"
+      - "LICENCSE"
 
 jobs:
   test:
