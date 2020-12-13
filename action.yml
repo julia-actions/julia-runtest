@@ -21,6 +21,7 @@ inputs:
     default: '@.'
   prefix:
     description: 'Value inserted in front of the julia command, e.g. for running xvfb-run julia [...]'
+    default: ''
     required: false
 
 runs:
