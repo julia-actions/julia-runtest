@@ -19,6 +19,10 @@ inputs:
   project:
     description: 'Value passed to the --project flag. The default value is the repository root: "@."'
     default: '@.'
+  prefix:
+    description: 'Value inserted in front of the julia command, e.g. for running xvfb-run julia [...]'
+    default: ''
+    required: false
 
 runs:
   using: 'composite'
@@ -39,5 +43,14 @@ runs:
         # the request metadata to pkg.julialang.org when installing
         # packages via `Pkg.test`.
         JULIA_PKG_SERVER: ""
-    - run: julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})'
+    - run: |
+        # The Julia command that will be executed
+        julia_cmd=( julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})' )
+
+        # Add the prefix in front of the command if there is one
+        prefix="${{ inputs.prefix }}"
+        [[ -n $prefix ]] && julia_cmd=( "$prefix" "${julia_cmd[@]}" )
+
+        # Run the Julia command
+        "${julia_cmd[@]}"
       shell: bash
