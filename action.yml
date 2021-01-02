@@ -35,7 +35,7 @@ runs:
     # * https://github.com/JuliaLang/Pkg.jl/issues/2011
     # * https://github.com/JuliaRegistries/General/issues/16777
     # * https://github.com/JuliaPackaging/PkgServer.jl/issues/60
-    - run: julia --color=yes -e 'using Pkg; VERSION >= v"1.5-" && !isdir(joinpath(DEPOT_PATH[1], "registries", "General")) && Pkg.Registry.add("General")'
+    - run: julia --color=yes "$GITHUB_ACTION_PATH"/add_general_registry.jl
       shell: bash
       env:
         # We set `JULIA_PKG_SERVER` only for this step to enforce
