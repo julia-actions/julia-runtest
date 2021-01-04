@@ -27,21 +27,23 @@ function add_general_registry()
 end
 
 function main(; n = 10, max_delay = 120)
-    if VERSION >= v"1.5-"
-        if !general_registry_exists()
-            delays = ExponentialBackOff(; n = n, max_delay = max_delay)
-            try
-                retry(add_general_registry; delays = delays)()
-                @info("Successfully added the General registry")
-            catch ex
-                msg = "I was unable to added the General registry. However, the build will continue."
-                @error(msg, exception=(ex,catch_backtrace()))
-            end
-        else
-            @info("The General registry already exists locally")
-        end
+    VERSION >= v"1.5-" || return
+
+    if general_registry_exists()
+        @info("The General registry already exists locally")
+        return
     end
-    return nothing
+
+    delays = ExponentialBackOff(; n = n, max_delay = max_delay)
+    try
+        retry(add_general_registry; delays = delays)()
+        @info("Successfully add the General registry")
+    catch ex
+        msg = "I was unable to added the General registry. However, the build will continue."
+        @error(msg, exception=(ex,catch_backtrace()))
+    end
+
+    return
 end
 
 main()
