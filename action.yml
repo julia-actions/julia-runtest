@@ -44,13 +44,6 @@ runs:
         # packages via `Pkg.test`.
         JULIA_PKG_SERVER: ""
     - run: |
-        # The Julia command that will be executed
-        julia_cmd=( julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})' )
-
-        # Add the prefix in front of the command if there is one
-        prefix="${{ inputs.prefix }}"
-        [[ -n $prefix ]] && julia_cmd=( "$prefix" "${julia_cmd[@]}" )
-
-        # Run the Julia command
-        "${julia_cmd[@]}"
-      shell: bash
+        using Pkg
+        Pkg.test(coverage=${{ inputs.coverage }})
+      shell: ${{ inputs.prefix }} julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} {0}
