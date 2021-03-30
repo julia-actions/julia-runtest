@@ -13,12 +13,8 @@ function kwargs(; coverage::Bool,
         if force_latest_compatible_version isa Bool
             kwargs_dict[:force_latest_compatible_version] = force_latest_compatible_version
         elseif force_latest_compatible_version == :auto
-            if is_dependabot_job
-                @info("This is a Dependabot/CompatHelper job, so `force_latest_compatible_version` has been set to `true`")
-                kwargs_dict[:force_latest_compatible_version] = true
-            else
-                kwargs_dict[:force_latest_compatible_version] = false
-            end
+            is_dependabot_job && @info("This is a Dependabot/CompatHelper job, so `force_latest_compatible_version` has been set to `true`")
+            kwargs_dict[:force_latest_compatible_version] = is_dependabot_job
         else
             throw(ArgumentError("Invalid value for force_latest_compatible_version: $(force_latest_compatible_version)"))
         end
