@@ -7,22 +7,22 @@ branding:
   color: 'gray-dark'
 
 inputs:
-  inline:
-    description: 'Value passed to the --inline flag. Options: yes | no. Default value: yes.'
-    default: 'yes'
   coverage:
     description: 'Value determining whether to test with coverage or not. Options: true | false. Default value: true.'
     default: 'true'
   depwarn:
     description: 'Value passed to the --depwarn flag. Options: yes | no | error. Default value: yes.'
     default: 'yes'
-  project:
-    description: 'Value passed to the --project flag. The default value is the repository root: "@."'
-    default: '@.'
+  inline:
+    description: 'Value passed to the --inline flag. Options: yes | no. Default value: yes.'
+    default: 'yes'
   prefix:
     description: 'Value inserted in front of the julia command, e.g. for running xvfb-run julia [...]'
     default: ''
     required: false
+  project:
+    description: 'Value passed to the --project flag. The default value is the repository root: "@."'
+    default: '@.'
 
 runs:
   using: 'composite'
