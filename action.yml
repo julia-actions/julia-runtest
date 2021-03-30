@@ -14,7 +14,7 @@ inputs:
     description: 'Value passed to the --depwarn flag. Options: yes | no | error. Default value: yes.'
     default: 'yes'
   force_latest_compatible_version:
-    description: 'If true, then, for each `[compat]` entry in the active project, only the latest compatible version will be allowed. Options: true | false | auto. Default value: auto. If the value is auto, then force_latest_compatible_version will be set to true if this is a Dependabot/CompatHelper pull request, and false otherwise.'
+    description: 'If true, then, for each [compat] entry in the active project, only allow the latest compatible version. If the value is auto and the pull request has been opened by Dependabot or CompatHelper, then force_latest_compatible_version will be set to true, otherwise it will be set to false. Options: true | false | auto. Default value: auto.'
     default: 'auto'
   inline:
     description: 'Value passed to the --inline flag. Options: yes | no. Default value: yes.'
