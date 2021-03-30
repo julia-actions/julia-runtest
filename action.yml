@@ -13,6 +13,9 @@ inputs:
   depwarn:
     description: 'Value passed to the --depwarn flag. Options: yes | no | error. Default value: yes.'
     default: 'yes'
+  force_latest_compatible_version:
+    description: 'If true, then, for each `[compat]` entry in the active project, only the latest compatible version will be allowed. Options: true | false | auto. Default value: auto. If the value is auto, then force_latest_compatible_version will be set to true if this is a Dependabot/CompatHelper pull request, and false otherwise.'
+    default: 'auto'
   inline:
     description: 'Value passed to the --inline flag. Options: yes | no. Default value: yes.'
     default: 'yes'
@@ -44,13 +47,18 @@ runs:
         # packages via `Pkg.test`.
         JULIA_PKG_SERVER: ""
     - run: |
-        # The Julia command that will be executed
-        julia_cmd=( julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})' )
-
-        # Add the prefix in front of the command if there is one
-        prefix="${{ inputs.prefix }}"
-        [[ -n $prefix ]] && julia_cmd=( "$prefix" "${julia_cmd[@]}" )
-
-        # Run the Julia command
-        "${julia_cmd[@]}"
+        JULIA_CMD="julia"
+        PREFIX="${{ inputs.prefix }}"
+        [[ -n $PREFIX ]] && JULIA_CMD="$PREFIX $JULIA_CMD"
+        echo "JULIA_CMD=$JULIA_CMD" >> $GITHUB_ENV
+      shell: bash
+    - run: |
+        ${{ env.JULIA_CMD }} --check-bounds=yes --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e '
+          import Pkg
+          include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"))
+          kwargs = Kwargs.kwargs(;
+            coverage = :(${{ inputs.coverage }}),
+            force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),
+          )
+          Pkg.test(; kwargs...)'
       shell: bash
