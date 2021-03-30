@@ -10,11 +10,7 @@ function _get_possible_branch_names()
 end
 
 function _chop_refs_head(branch_name::AbstractString)
-    if startswith(branch_name, "refs/heads/")
-        return replace(branch_name, r"^(refs\/heads\/)" => "")
-    else
-        return branch_name
-    end
+    replace(branch_name, r"^(refs\/heads\/)" => "")
 end
 
 function _is_dependabot_branch(branch_name::AbstractString)
