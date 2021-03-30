@@ -24,11 +24,7 @@ function kwargs(; coverage::Bool,
         end
     else
         if force_latest_compatible_version != :auto
-            @warn(
-                  "The `force_latest_compatible_version` option requires at least Julia 1.7",
-                  VERSION,
-                  force_latest_compatible_version,
-            )
+            @warn("The `force_latest_compatible_version` option requires at least Julia 1.7", VERSION, force_latest_compatible_version)
         end
     end
     return kwargs_dict
