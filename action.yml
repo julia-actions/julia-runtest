@@ -13,6 +13,9 @@ inputs:
   depwarn:
     description: 'Value passed to the --depwarn flag. Options: yes | no | error. Default value: yes.'
     default: 'yes'
+  force_latest_compatible_version:
+    description: 'If true, then, for each [compat] entry in the active project, only allow the latest compatible version. If the value is auto and the pull request has been opened by Dependabot or CompatHelper, then force_latest_compatible_version will be set to true, otherwise it will be set to false. Options: true | false | auto. Default value: auto.'
+    default: 'auto'
   inline:
     description: 'Value passed to the --inline flag. Options: yes | no. Default value: yes.'
     default: 'yes'
@@ -45,7 +48,7 @@ runs:
         JULIA_PKG_SERVER: ""
     - run: |
         # The Julia command that will be executed
-        julia_cmd=( julia --color=yes --check-bounds=yes --inline=${{ inputs.inline }} --depwarn=${{ inputs.depwarn }} --project=${{ inputs.project }} -e 'using Pkg; Pkg.test(coverage=${{ inputs.coverage }})' )
+        julia_cmd=( julia --check-bounds=yes --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),);Pkg.test(; kwargs...)' )
 
         # Add the prefix in front of the command if there is one
         prefix="${{ inputs.prefix }}"
