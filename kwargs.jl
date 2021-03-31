@@ -8,8 +8,7 @@ function kwargs(; coverage::Bool,
     kwargs_dict = Dict{Symbol, Any}()
     kwargs_dict[:coverage] = coverage
 
-    if !Sys.isapple() && VERSION >= v"1.7.0-" # TODO: delete this line
-    # if VERSION >= v"1.7.0-" # excludes 1.6, includes 1.7-DEV, includes 1.7 # TODO: uncomment this line
+    if VERSION >= v"1.7.0-" # excludes 1.6, includes 1.7-DEV, includes 1.7
         if force_latest_compatible_version isa Bool
             kwargs_dict[:force_latest_compatible_version] = force_latest_compatible_version
         elseif force_latest_compatible_version == :auto
