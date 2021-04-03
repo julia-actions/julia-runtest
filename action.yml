@@ -7,6 +7,9 @@ branding:
   color: 'gray-dark'
 
 inputs:
+  additional_keyword_arguments:
+    description: 'Additional keyword arguments to pass to the `Pkg.test` function.'
+    default: ''
   coverage:
     description: 'Value determining whether to test with coverage or not. Options: true | false. Default value: true.'
     default: 'true'
@@ -48,7 +51,7 @@ runs:
         JULIA_PKG_SERVER: ""
     - run: |
         # The Julia command that will be executed
-        julia_cmd=( julia --check-bounds=yes --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),);Pkg.test(; kwargs...)' )
+        julia_cmd=( julia --check-bounds=yes --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg; include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl")); kwargs = Kwargs.kwargs(); Pkg.test(; kwargs...)' )
 
         # Add the prefix in front of the command if there is one
         prefix="${{ inputs.prefix }}"
@@ -57,3 +60,7 @@ runs:
         # Run the Julia command
         "${julia_cmd[@]}"
       shell: bash
+      env:
+        INPUT_COVERAGE: ${{ inputs.coverage }}
+        INPUT_FORCE_LATEST_COMPATIBLE_VERSION: ${{ inputs.force_latest_compatible_version }}
+        INPUT_ADDITIONAL_KEYWORD_ARGUMENTS: ${{ inputs.additional_keyword_arguments }}
