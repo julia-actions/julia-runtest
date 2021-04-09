@@ -1,5 +1,7 @@
 module Kwargs
 
+import Pkg
+
 include(joinpath(@__DIR__, "autodetect-dependabot.jl"))
 
 function kwargs(; coverage::Bool,
@@ -10,12 +12,12 @@ function kwargs(; coverage::Bool,
 
     kwargs_dict = Dict{Symbol, Any}()
     kwargs_dict[:coverage] = coverage
-  
-    if VERSION < v"1.7.0-"
+
+    if VERSION < v"1.7.0-" || !hasmethod(Pkg.Operations.test, Tuple{Pkg.Types.Context, Vector{Pkg.Types.PackageSpec}}, (:force_latest_compatible_version,))
         (force_latest_compatible_version != :auto) && @warn("The `force_latest_compatible_version` option requires at least Julia 1.7", VERSION, force_latest_compatible_version)
         return kwargs_dict
     end
-  
+
     if force_latest_compatible_version == :auto
         is_dependabot_job = AutodetectDependabot.is_dependabot_job()
         is_dependabot_job && @info("This is a Dependabot/CompatHelper job, so `force_latest_compatible_version` has been set to `true`")
