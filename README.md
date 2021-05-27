@@ -34,7 +34,7 @@ jobs:
       - uses: julia-actions/julia-runtest@v1
 ```
 
-You can add this workflow to your repository by placing it in a file called `Test.yml` in the folder `.github/workflows/`. [More info here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions).
+You can add this workflow to your repository by placing it in a file called `test.yml` in the folder `.github/workflows/`. [More info here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions).
 
 ### Prefixing the Julia command
 
