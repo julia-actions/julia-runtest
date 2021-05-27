@@ -8,7 +8,7 @@ Julia needs to be installed before this action can run. This can easily be achie
 
 And example workflow that uses this action might look like this:
 
-```
+```yaml
 name: Run tests
 
 on: [push, pull_request]
