@@ -7,6 +7,9 @@ branding:
   color: 'gray-dark'
 
 inputs:
+  check_bounds:
+    description: 'Value determining which bounds checking setting to use. Options: yes | no | auto. Default value: yes.'
+    default: 'yes'
   coverage:
     description: 'Value determining whether to test with coverage or not. Options: true | false. Default value: true.'
     default: 'true'
@@ -48,7 +51,12 @@ runs:
         JULIA_PKG_SERVER: ""
     - run: |
         # The Julia command that will be executed
-        julia_cmd=( julia --check-bounds=yes --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),);Pkg.test(; kwargs...)' )
+        check_bounds_opt=' '
+        if [[ ${{ inputs.check_bounds }} != 'auto' ]]
+        then
+          check_bounds_opt='--check-bounds=${{ inputs.check_bounds }} '
+        fi
+        julia_cmd=( julia ${{ check_bounds_opt }}--color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),);Pkg.test(; kwargs...)' )
 
         # Add the prefix in front of the command if there is one
         prefix="${{ inputs.prefix }}"
