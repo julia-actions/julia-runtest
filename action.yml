@@ -51,12 +51,13 @@ runs:
         JULIA_PKG_SERVER: ""
     - run: |
         # The Julia command that will be executed
-        check_bounds_opt=' '
+        julia_cmd=''
         if [[ ${{ inputs.check_bounds }} != 'auto' ]]
         then
-          check_bounds_opt='--check-bounds=${{ inputs.check_bounds }} '
+          julia_cmd=( julia --check-bounds=${{ inputs.check_bounds }} --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),);Pkg.test(; kwargs...)' )
+        else
+          julia_cmd=( julia --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),);Pkg.test(; kwargs...)' )
         fi
-        julia_cmd=( julia "$check_bounds_opt"--color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),);Pkg.test(; kwargs...)' )
 
         # Add the prefix in front of the command if there is one
         prefix="${{ inputs.prefix }}"
