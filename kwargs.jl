@@ -5,7 +5,8 @@ import Pkg
 include(joinpath(@__DIR__, "autodetect-dependabot.jl"))
 
 function kwargs(; coverage::Bool,
-                  force_latest_compatible_version::Union{Bool, Symbol})
+                  force_latest_compatible_version::Union{Bool, Symbol},
+                  julia_args::Union{Cmd, AbstractVector{<:AbstractString}}=``)
     if !(force_latest_compatible_version isa Bool) && (force_latest_compatible_version != :auto)
         throw(ArgumentError("Invalid value for force_latest_compatible_version: $(force_latest_compatible_version)"))
     end
@@ -25,6 +26,8 @@ function kwargs(; coverage::Bool,
     else
         kwargs_dict[:force_latest_compatible_version] = force_latest_compatible_version::Bool
     end
+
+    kwargs_dict[:julia_args] = julia_args
 
     return kwargs_dict
 end
