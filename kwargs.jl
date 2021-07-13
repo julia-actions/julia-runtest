@@ -13,6 +13,7 @@ function kwargs(; coverage::Bool,
 
     kwargs_dict = Dict{Symbol, Any}()
     kwargs_dict[:coverage] = coverage
+    kwargs_dict[:julia_args] = julia_args
 
     if VERSION < v"1.7.0-" || !hasmethod(Pkg.Operations.test, Tuple{Pkg.Types.Context, Vector{Pkg.Types.PackageSpec}}, (:force_latest_compatible_version,))
         (force_latest_compatible_version != :auto) && @warn("The `force_latest_compatible_version` option requires at least Julia 1.7", VERSION, force_latest_compatible_version)
@@ -26,8 +27,6 @@ function kwargs(; coverage::Bool,
     else
         kwargs_dict[:force_latest_compatible_version] = force_latest_compatible_version::Bool
     end
-
-    kwargs_dict[:julia_args] = julia_args
 
     return kwargs_dict
 end
