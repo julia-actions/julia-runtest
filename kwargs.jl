@@ -17,7 +17,7 @@ function kwargs(; coverage::Bool,
     if VERSION >= v"1.6.0"
         kwargs_dict[:julia_args] = julia_args
     elseif julia_args != ``
-        @warn("The `julia_args` option requires at least Julia 1.6", VERSION, julia_args)
+        println("::warning::The `julia_args` option requires at least Julia 1.6. VERSION=$VERSION, julia_args=$julia_args")
     end
 
     if VERSION < v"1.7.0-" || !hasmethod(Pkg.Operations.test, Tuple{Pkg.Types.Context, Vector{Pkg.Types.PackageSpec}}, (:force_latest_compatible_version,))
