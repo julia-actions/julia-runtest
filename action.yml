@@ -48,12 +48,16 @@ runs:
         JULIA_PKG_SERVER: ""
     - run: |
         # The Julia command that will be executed
-        julia_cmd=( julia --check-bounds=yes --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),);Pkg.test(; kwargs...)' )
+        julia_cmd="julia --check-bounds=yes --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV[\"GITHUB_ACTION_PATH\"], \"kwargs.jl\"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}),);Pkg.test(; kwargs...)'"
 
         # Add the prefix in front of the command if there is one
         prefix="${{ inputs.prefix }}"
-        [[ -n $prefix ]] && julia_cmd=( "$prefix" "${julia_cmd[@]}" )
-
-        # Run the Julia command
-        "${julia_cmd[@]}"
+        if [[ -n $prefix ]]
+        then
+          cmd="$prefix $julia_cmd"
+          eval $cmd
+        else
+          cmd="$julia_cmd"
+          eval $cmd
+        fi
       shell: bash
