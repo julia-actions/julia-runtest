@@ -6,7 +6,7 @@ This action runs the tests in a Julia package.
 
 Julia needs to be installed before this action can run. This can easily be achieved with the [setup-julia](https://github.com/marketplace/actions/setup-julia-environment) action.
 
-And example workflow that uses this action might look like this:
+An example workflow that uses this action might look like this:
 
 ```yaml
 name: Run tests
