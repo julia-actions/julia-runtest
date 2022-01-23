@@ -29,10 +29,6 @@ inputs:
   project:
     description: 'Value passed to the --project flag. The default value is the repository root: "@."'
     default: '@.'
-    
- outputs:
-   julia_runtest_exit:
-     description: Exit status of the Julia test command
 
 runs:
   using: 'composite'
@@ -64,6 +60,6 @@ runs:
         # Run the Julia command
         "${julia_cmd[@]}"
         
-        # Set an output to indicate the test result
-        echo "::set-output name=julia_runtest_exit::$?"
+        # Set an environment variable to indicate the test result
+        echo "JULIA_RUNTEST_EXIT=$?" >> "$GITHUB_ENV"
       shell: bash
