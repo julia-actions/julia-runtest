@@ -29,6 +29,10 @@ inputs:
   project:
     description: 'Value passed to the --project flag. The default value is the repository root: "@."'
     default: '@.'
+    
+ outputs:
+   julia_runtest_exit:
+     description: Exit status of the Julia test command
 
 runs:
   using: 'composite'
