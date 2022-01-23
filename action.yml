@@ -58,8 +58,10 @@ runs:
         [[ -n $prefix ]] && julia_cmd=( "$prefix" "${julia_cmd[@]}" )
 
         # Run the Julia command
+        set +e
         "${julia_cmd[@]}"
+        status="$?"
         
         # Set an environment variable to indicate the test result
-        echo "JULIA_RUNTEST_EXIT=$?" >> "$GITHUB_ENV"
+        echo "JULIA_RUNTEST_EXIT=$status" >> "$GITHUB_ENV" && exit "$status"
       shell: bash
