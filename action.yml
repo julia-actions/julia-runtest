@@ -59,4 +59,7 @@ runs:
 
         # Run the Julia command
         "${julia_cmd[@]}"
+        
+        # Set an output to indicate the test result
+        echo "::set-output name=julia_runtest_exit::$?"
       shell: bash
