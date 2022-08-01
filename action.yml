@@ -49,9 +49,23 @@ runs:
         # the request metadata to pkg.julialang.org when installing
         # packages via `Pkg.test`.
         JULIA_PKG_SERVER: ""
+    - name: Install dependencies in their own (shared) environment
+      run: |
+        using Pkg
+        Pkg.activate("tests-logger-env"; shared=true)
+        Pkg.add(Pkg.PackageSpec(name="GitHubActions", version="0.1"))
+        Pkg.add(Pkg.PackageSpec(name="IOCapture", version="0.2"))
+      shell: julia --color=yes {0}
     - run: |
         # The Julia command that will be executed
-        julia_cmd=( julia --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'import Pkg;include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"));kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}), julia_args = ["--check-bounds=${{ inputs.check_bounds }}"]);Pkg.test(; kwargs...)' )
+        julia_cmd=( julia --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e '
+        import Pkg
+        include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"))
+        kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}), julia_args = ["--check-bounds=${{ inputs.check_bounds }}"])
+        push!(LOAD_PATH, "@tests-logger-env") # access GitHubActions.jl
+        include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_wrapper.jl"))
+        pop!(LOAD_PATH)
+        TestWrapper.test(; kwargs...)' )
 
         # Add the prefix in front of the command if there is one
         prefix="${{ inputs.prefix }}"
