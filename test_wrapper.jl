@@ -11,9 +11,22 @@ function parse_and_relog(output)
     r = r"(\e\[91m\e\[1m)?Test Failed(\e\[22m\e\[39m)? at (\e\[39m\e\[1m)?(?<path>[^\s\e]+)(\e\[22m)?\n\h*Expression:\h*(?<expression>[^\n]+)\h*\n\h*Evaluated:\h*(?<evaluated>[^\n]+)\h*\n"
     matches = eachmatch(r, output)
     for m in matches
-        msg = string("Expression: ", m[:expression], "\n", "Evaluated: ", m[:evaluated])
-        path, ln = rsplit(m[:path], ":", limit=2)
-        @error msg _file = path _line = ln
+        msg = "Test Failed"
+        if !isnothing(m[:expression]) && !isnothing(m[:evaluated])
+                msg = string(msg, "\nExpression: ", m[:expression], "\n", "Evaluated: ", m[:evaluated])
+        end
+        if m[:path] === nothing
+            path = nothing
+            line = nothing
+        else
+            path_split_results = rsplit(m[:path], ":", limit=2)
+            if length(path_split_results) == 1
+                path = m[:path]
+            else
+                path, line = path_split_results
+            end
+        end
+        @error msg _file = path _line = line
     end
 end
 
