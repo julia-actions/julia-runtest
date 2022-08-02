@@ -31,7 +31,7 @@ inputs:
     default: '@.'
   annotate:
     description: 'Whether or not to attempt to create GitHub annotations to show test failures inline. Only effective on Julia 1.8+.'
-    default: 'true'
+    default: 'false'
 
 runs:
   using: 'composite'
