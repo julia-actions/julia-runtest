@@ -13,58 +13,77 @@ function parse_file_line(failed_line)
         if length(path_split_results) == 1
             return (m[:path], nothing)
         else
-            path, line = path_split_results
+            path, line_no = path_split_results
 
             # Try to make sure line number is parseable to avoid false positives
-            line = tryparse(Int, line) === nothing ? nothing : line
-            return (path, line)
+            line_no = tryparse(Int, line_no) === nothing ? nothing : line_no
+            return (path, line_no)
         end
     end
     return (nothing, nothing)
 end
 
-function readlines_until_print(stream, delim; keep_lines=true)
+function readlines_until(f, stream; keep_lines=true, io)
     lines = String[]
     while true
         line = readline(stream; keep=true)
-        print(line)
+        print(io, line)
 
         # with `keep=true`, this should only happen when we're done?
         # I think so...
         if line == ""
             return line, lines
         end
-        if contains(line, delim)
+        if f(line)
             return line, lines
         else
             keep_lines && push!(lines, line)
         end
     end
-
 end
 
-function test(args...; kwargs...)
+function has_test_failure(line)
+    contains(line, "Test Failed") || return false
+    file, line_no = parse_file_line(line)
+    return !isnothing(file) && !isnothing(line_no)
+end
+
+function build_stream(io)
     stream = Base.BufferStream()
     t = @async begin
         while !eof(stream)
-            # Iterate through and print until we get to "Test Failed"
-            failed_line, _ = readlines_until_print(stream, "Test Failed"; keep_lines=false)
+            # Iterate through and print until we get to "Test Failed" and can parse it
+            failed_line, _ = readlines_until(has_test_failure, stream; keep_lines=false, io)
+            @label found_failed_line
+            # Parse file and line out
+            file, line_no = parse_file_line(failed_line)
 
-            # Try to parse file and line out
-            file, line = parse_file_line(failed_line)
+            # Grab everything until the stacktrace, OR we hit another `Test Failed`
+            stopped_line, msg_lines = readlines_until(stream; io) do line
+                contains(line, "Stacktrace:") || has_test_failure(line)
+            end
 
-            # Couldn't parse? Probably a false positive, keep going
-            (isnothing(file) || isnothing(line)) && continue
+            # If we stopped because we hit a 2nd test failure,
+            # let's assume somehow the stacktrace didn't show up for the first one.
+            # Let's continue by trying to find the info for this one, by jumping back.
+            if has_test_failure(stopped_line)
+                failed_line = stopped_line
+                @goto found_failed_line
+            end
 
-            # Could parse? Ok, grab everything until the stacktrace
-            _, msg_lines = readlines_until_print(stream, "Stacktrace:")
-
-            msg = string("Test Failed\n", chomp(join(msg_lines)))
-
-            # Now log it out
-            @error msg _file = file _line = line
+            if !isempty(msg_lines)
+                msg = string("Test Failed\n", chomp(join(msg_lines)))
+                # Now log it out
+                @error msg _file=file _line=line_no
+            end
         end
     end
+    return stream, t
+end
+
+
+function test(args...; kwargs...)
+    stream, t = build_stream(stdout)
     Base.errormonitor(t)
     return try
         Pkg.test(args...; kwargs..., io=stream)
