@@ -1,11 +1,5 @@
 module TestWrapper
-using IOCapture, Pkg, GitHubActions, Logging
-
-function collect_test_outputs(args...; kwargs...)
-    return IOCapture.capture(; rethrow=InterruptException) do
-        Pkg.test(args...; kwargs...)
-    end
-end
+using Pkg, GitHubActions, Logging
 
 function parse_and_relog(output)
     r = r"(\e\[91m\e\[1m)?Test Failed(\e\[22m\e\[39m)? at (\e\[39m\e\[1m)?(?<path>[^\s\e]+)(\e\[22m)?\n\h*Expression:\h*(?<expression>[^\n]+)\h*\n\h*Evaluated:\h*(?<evaluated>[^\n]+)\h*\n"
@@ -26,20 +20,31 @@ function parse_and_relog(output)
                 path, line = path_split_results
             end
         end
-        @error msg _file = path _line = line
+        with_logger(GitHubActionsLogger()) do
+            @error msg _file = path _line = line
+        end
     end
 end
 
 function test(args...; kwargs...)
-    res = collect_test_outputs(args...; kwargs...)
-    with_logger(GitHubActionsLogger()) do
-        parse_and_relog(res.output)
+    stream = Base.BufferStream()
+    t = @async begin
+        while !eof(stream)
+            line = readline(stream)
+            println(line)
+            if contains(line, "Test Failed")
+                failure_lines = [line]
+                while !contains(line, "Stacktrace:")
+                    line = readline(stream)
+                    println(line)
+                    push!(failure_lines, line)
+                end
+                parse_and_relog(join(failure_lines, "\n"))
+            end
+        end
     end
-    print(res.output)
-    if res.error
-        throw(res.value)
-    end
-    return nothing
+    Base.errormonitor(t)
+    return Pkg.test(args...; kwargs..., io=stream)
 end
 
 end # module

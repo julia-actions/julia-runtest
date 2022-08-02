@@ -30,7 +30,7 @@ inputs:
     description: 'Value passed to the --project flag. The default value is the repository root: "@."'
     default: '@.'
   annotate:
-    description: 'Whether or not to attempt to create GitHub annotations to show test failures inline.'
+    description: 'Whether or not to attempt to create GitHub annotations to show test failures inline. Only effective on Julia 1.8+.'
     default: 'true'
 
 runs:
@@ -57,7 +57,6 @@ runs:
         using Pkg
         Pkg.activate("tests-logger-env"; shared=true)
         Pkg.add(Pkg.PackageSpec(name="GitHubActions", version="0.1"))
-        Pkg.add(Pkg.PackageSpec(name="IOCapture", version="0.2"))
       shell: julia --color=yes {0}
       if: inputs.annotate == 'true'
     - run: |
@@ -68,7 +67,7 @@ runs:
         kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}), julia_args = ["--check-bounds=${{ inputs.check_bounds }}"])
 
         if ${{ inputs.annotate }}
-          push!(LOAD_PATH, "@tests-logger-env") # access GitHubActions.jl
+          push!(LOAD_PATH, "@tests-logger-env") # access dependencies
           include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_wrapper.jl"))
           pop!(LOAD_PATH)
           TestWrapper.test(; kwargs...)        
