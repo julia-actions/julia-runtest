@@ -1,5 +1,5 @@
 module TestWrapper
-using Pkg, Logging
+using Pkg
 
 function parse_file_line(failed_line)
     r = r"(\e\[91m\e\[1m)?Test Failed(\e\[22m\e\[39m)? at (\e\[39m\e\[1m)?(?<path>[^\s\e]+)(\e\[22m)?"
