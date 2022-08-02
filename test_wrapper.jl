@@ -1,5 +1,5 @@
 module TestWrapper
-using Pkg, GitHubActions, Logging
+using Pkg, Logging
 
 function parse_file_line(failed_line)
     r = r"(\e\[91m\e\[1m)?Test Failed(\e\[22m\e\[39m)? at (\e\[39m\e\[1m)?(?<path>[^\s\e]+)(\e\[22m)?"
@@ -15,7 +15,7 @@ function parse_file_line(failed_line)
         else
             path, line = path_split_results
 
-            # Try to make sure line number is parseable to avoid FPs
+            # Try to make sure line number is parseable to avoid false positives
             line = tryparse(Int, line) === nothing ? nothing : line
             return (path, line)
         end
@@ -59,12 +59,10 @@ function test(args...; kwargs...)
             # Could parse? Ok, grab everything until the stacktrace
             _, msg_lines = readlines_until_print(stream, "Stacktrace:")
 
-            msg = chomp(join(msg_lines))
+            msg = string("Test Failed\n", chomp(join(msg_lines)))
 
             # Now log it out
-            with_logger(GitHubActionsLogger()) do
-                @error msg _file = file _line = line
-            end
+            @error msg _file = file _line = line
         end
     end
     Base.errormonitor(t)

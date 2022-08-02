@@ -70,6 +70,8 @@ runs:
 
         if ${{ inputs.annotate }} && VERSION > v"1.8pre"
           push!(LOAD_PATH, "@tests-logger-env") # access dependencies
+          using GitHubActions
+          global_logger(GitHubActionsLogger())
           include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_wrapper.jl"))
           pop!(LOAD_PATH)
           TestWrapper.test(; kwargs...)        
