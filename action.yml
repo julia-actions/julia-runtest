@@ -54,9 +54,11 @@ runs:
         JULIA_PKG_SERVER: ""
     - name: Install dependencies in their own (shared) environment
       run: |
-        using Pkg
-        Pkg.activate("tests-logger-env"; shared=true)
-        Pkg.add(Pkg.PackageSpec(name="GitHubActions", version="0.1"))
+        if VERSION > v"1.8pre"
+          using Pkg
+          Pkg.activate("tests-logger-env"; shared=true)
+          Pkg.add(Pkg.PackageSpec(name="GitHubActions", version="0.1"))
+        end
       shell: julia --color=yes {0}
       if: inputs.annotate == 'true'
     - run: |
@@ -66,7 +68,7 @@ runs:
         include(joinpath(ENV["GITHUB_ACTION_PATH"], "kwargs.jl"))
         kwargs = Kwargs.kwargs(;coverage = :(${{ inputs.coverage }}),force_latest_compatible_version = :(${{ inputs.force_latest_compatible_version }}), julia_args = ["--check-bounds=${{ inputs.check_bounds }}"])
 
-        if ${{ inputs.annotate }}
+        if ${{ inputs.annotate }} && VERSION > v"1.8pre"
           push!(LOAD_PATH, "@tests-logger-env") # access dependencies
           include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_wrapper.jl"))
           pop!(LOAD_PATH)
