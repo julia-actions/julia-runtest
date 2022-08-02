@@ -1,4 +1,4 @@
-name: TestWrapper CI
+name: TestLogger CI
 
 on:
   push:
@@ -50,4 +50,4 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
 
-      - run: julia --color=yes --check-bounds=yes test_wrapper_tests.jl
+      - run: julia --color=yes --check-bounds=yes test_logger_tests.jl

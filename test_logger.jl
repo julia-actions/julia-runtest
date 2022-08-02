@@ -1,4 +1,4 @@
-module TestWrapper
+module TestLogger
 using Pkg
 
 function parse_file_line(failed_line)

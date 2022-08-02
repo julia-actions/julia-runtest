@@ -1,11 +1,11 @@
-include("test_wrapper.jl")
+include("test_logger.jl")
 using Logging, Test
 
 function simulate(text)
     logger = Test.TestLogger()
     output = IOBuffer()
     with_logger(logger) do
-        stream, t = TestWrapper.build_stream(output)
+        stream, t = TestLogger.build_stream(output)
         for line in eachline(IOBuffer(text); keep=true)
             write(stream, line)
         end
@@ -15,7 +15,7 @@ function simulate(text)
     return String(take!(output)), logger.logs
 end
 
-@testset "TestWrapper" begin
+@testset "TestLogger" begin
 
     for input in (
             """
