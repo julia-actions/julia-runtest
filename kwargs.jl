@@ -10,7 +10,7 @@ function kwargs(; coverage,
     if coverage isa AbstractString
         coverage = parse(Bool, coverage)
     end
-    @assert coverage isa Bool
+    coverage isa Bool || error("Unexpected type of `coverage`: $(typeof(coverage))")
 
     if force_latest_compatible_version isa AbstractString
         res = tryparse(Bool, force_latest_compatible_version)
@@ -19,7 +19,9 @@ function kwargs(; coverage,
         end
         force_latest_compatible_version = res
     end
-    @assert force_latest_compatible_version isa Union{Bool, Symbol}
+    if !(force_latest_compatible_version isa Union{Bool, Symbol})
+        error("Unexpected type of `force_latest_compatible_version`: $(typeof(force_latest_compatible_version))")
+    end
 
     if !(force_latest_compatible_version isa Bool) && (force_latest_compatible_version != :auto)
         throw(ArgumentError("Invalid value for force_latest_compatible_version: $(force_latest_compatible_version)"))

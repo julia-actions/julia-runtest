@@ -73,7 +73,7 @@ runs:
         "${julia_cmd[@]}"
       shell: bash
       env:
-        ANNOTATE: inputs.annotate
-        COVERAGE: inputs.coverage
-        FORCE_LATEST_COMPATIBLE_VERSION: inputs.force_latest_compatible_version
-        CHECK_BOUNDS: inputs.check_bounds
+        ANNOTATE: ${{ inputs.annotate }}
+        COVERAGE: ${{ inputs.coverage }}
+        FORCE_LATEST_COMPATIBLE_VERSION: ${{ inputs.force_latest_compatible_version }}
+        CHECK_BOUNDS: ${{ inputs.check_bounds }}
