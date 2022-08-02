@@ -2,6 +2,8 @@ module TestWrapper
 using Pkg
 
 function parse_file_line(failed_line)
+    # The bits like `\e[91m\e[1m` are color codes that get printed by `Pkg.test`. We
+    # match with or without them.
     r = r"(\e\[91m\e\[1m)?Test Failed(\e\[22m\e\[39m)? at (\e\[39m\e\[1m)?(?<path>[^\s\e]+)(\e\[22m)?"
     m = match(r, failed_line)
     m === nothing && return (nothing, nothing)
