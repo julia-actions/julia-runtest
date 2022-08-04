@@ -4,9 +4,25 @@ import Pkg
 
 include(joinpath(@__DIR__, "autodetect-dependabot.jl"))
 
-function kwargs(; coverage::Bool,
-                  force_latest_compatible_version::Union{Bool, Symbol},
+function kwargs(; coverage,
+                  force_latest_compatible_version,
                   julia_args::AbstractVector{<:AbstractString}=String[])
+    if coverage isa AbstractString
+        coverage = parse(Bool, coverage)
+    end
+    coverage isa Bool || error("Unexpected type of `coverage`: $(typeof(coverage))")
+
+    if force_latest_compatible_version isa AbstractString
+        res = tryparse(Bool, force_latest_compatible_version)
+        if res === nothing
+            res = Symbol(force_latest_compatible_version)
+        end
+        force_latest_compatible_version = res
+    end
+    if !(force_latest_compatible_version isa Union{Bool, Symbol})
+        error("Unexpected type of `force_latest_compatible_version`: $(typeof(force_latest_compatible_version))")
+    end
+
     if !(force_latest_compatible_version isa Bool) && (force_latest_compatible_version != :auto)
         throw(ArgumentError("Invalid value for force_latest_compatible_version: $(force_latest_compatible_version)"))
     end
