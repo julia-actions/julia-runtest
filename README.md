@@ -11,7 +11,12 @@ An example workflow that uses this action might look like this:
 ```yaml
 name: Run tests
 
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
 
 jobs:
   test:
