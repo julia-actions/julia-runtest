@@ -66,8 +66,8 @@ runs:
         julia_cmd=( julia --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' )
 
         # Add the prefix in front of the command if there is one
-        prefix="${{ inputs.prefix }}"
-        [[ -n $prefix ]] && julia_cmd=( "$prefix" "${julia_cmd[@]}" )
+        prefix=( ${{ inputs.prefix }} )
+        [[ -n ${prefix[*]} ]] && julia_cmd=( "${prefix[@]}" "${julia_cmd[@]}" )
 
         # Run the Julia command
         "${julia_cmd[@]}"
