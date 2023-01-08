@@ -70,7 +70,7 @@ runs:
         [[ -n ${prefix[*]} ]] && julia_cmd=( "${prefix[@]}" "${julia_cmd[@]}" )
 
         # Run the Julia command
-        echo "::debug::The following Julia command will be executed: ${julia_cmd[*]}"
+        echo "::debug::Executing Julia: ${julia_cmd[*]}"
         "${julia_cmd[@]}"
       shell: bash
       env:
