@@ -36,6 +36,9 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Set and export registry flavor preference
+      run: echo "JULIA_PKG_SERVER_REGISTRY_PREFERENCE=${JULIA_PKG_SERVER_REGISTRY_PREFERENCE:-eager}" >> ${GITHUB_ENV}
+      shell: bash
     - name: Install dependencies in their own (shared) environment
       run: |
         if VERSION > v"1.8pre"
@@ -45,8 +48,6 @@ runs:
         end
       shell: julia --color=yes {0}
       if: inputs.annotate == 'true'
-      env:
-        JULIA_PKG_SERVER_REGISTRY_PREFERENCE: "${{ env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE == '' && 'eager' || env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE }}"
     - run: |
         # The Julia command that will be executed
         julia_cmd=( julia --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' )
@@ -64,4 +65,3 @@ runs:
         COVERAGE: ${{ inputs.coverage }}
         FORCE_LATEST_COMPATIBLE_VERSION: ${{ inputs.force_latest_compatible_version }}
         CHECK_BOUNDS: ${{ inputs.check_bounds }}
-        JULIA_PKG_SERVER_REGISTRY_PREFERENCE: "${{ env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE == '' && 'eager' || env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE }}"
