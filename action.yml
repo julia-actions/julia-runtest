@@ -36,22 +36,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    # Occasionally, there are rather large delays (> a few hours)
-    # between the time a package is registered in General and
-    # propagated to pkg.julialang.org.  We can avoid this by manually
-    # cloning ~/.julia/registries/General/ in Julia 1.5 and later.
-    # See:
-    # * https://github.com/JuliaLang/Pkg.jl/issues/2011
-    # * https://github.com/JuliaRegistries/General/issues/16777
-    # * https://github.com/JuliaPackaging/PkgServer.jl/issues/60
-    - run: julia --color=yes "$GITHUB_ACTION_PATH"/add_general_registry.jl
-      shell: bash
-      env:
-        # We set `JULIA_PKG_SERVER` only for this step to enforce
-        # `Pkg.Registry.add` to use Git.  This way, Pkg.jl can send
-        # the request metadata to pkg.julialang.org when installing
-        # packages via `Pkg.test`.
-        JULIA_PKG_SERVER: ""
     - name: Install dependencies in their own (shared) environment
       run: |
         if VERSION > v"1.8pre"
@@ -61,6 +45,8 @@ runs:
         end
       shell: julia --color=yes {0}
       if: inputs.annotate == 'true'
+      env:
+        JULIA_PKG_SERVER_REGISTRY_PREFERENCE: "${{ env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE == '' && 'eager' || env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE }}"
     - run: |
         # The Julia command that will be executed
         julia_cmd=( julia --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' )
@@ -78,3 +64,4 @@ runs:
         COVERAGE: ${{ inputs.coverage }}
         FORCE_LATEST_COMPATIBLE_VERSION: ${{ inputs.force_latest_compatible_version }}
         CHECK_BOUNDS: ${{ inputs.check_bounds }}
+        JULIA_PKG_SERVER_REGISTRY_PREFERENCE: "${{ env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE == '' && 'eager' || env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE }}"
