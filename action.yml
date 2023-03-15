@@ -39,7 +39,7 @@ runs:
     - name: 'DEPRECATION WARNING: @master will no longer receive updates and will start to error in the future. Please use version tags like @v1 or commit SHAs in your workflows!'
       run: |
         echo "::warning title=DEPRECATION WARNING::@master will no longer receive updates and will start to error in the future. Please use version tags like @v1 or commit SHAs in your workflows!"
-        echo "# :warning: DEPRECATION WARNING :warning:\n\n@master will no longer receive updates and will start to error in the future. Please use version tags like @v1 or commit SHAs in your workflows!" >> $GITHUB_STEP_SUMMARY
+        echo "# :warning: DEPRECATION WARNING :warning: @master will no longer receive updates and will start to error in the future. Please use version tags like @v1 or commit SHAs in your workflows!" >> $GITHUB_STEP_SUMMARY
       shell: bash
     - name: Set and export registry flavor preference
       run: echo "JULIA_PKG_SERVER_REGISTRY_PREFERENCE=${JULIA_PKG_SERVER_REGISTRY_PREFERENCE:-eager}" >> ${GITHUB_ENV}
