@@ -38,13 +38,14 @@ jobs:
           arch: ${{ matrix.julia-arch }}
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
-        with:
-          annotate: true
+        # with:
+        #   annotate: true
 ```
 
 You can add this workflow to your repository by placing it in a file called `test.yml` in the folder `.github/workflows/`. [More info here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions).
 
 Here, setting `annotate: true` causes GitHub "annotations" to appear when reviewing the PR, pointing to failing tests, if any.
+Note that this impacts stacktraces in case of errors (see #76).
 By default, `annotate` is set to false, but that may change in future releases of this action.
 ### Prefixing the Julia command
 
