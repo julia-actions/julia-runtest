@@ -41,7 +41,8 @@ runs:
       shell: bash
     - name: Install dependencies in their own (shared) environment
       run: |
-        if VERSION > v"1.8pre"
+        # Functionality only currently works on a narrow range of Julia versions... see #76
+        if v"1.8pre" < VERSION < v"1.9.0-beta3"
           using Pkg
           Pkg.activate("tests-logger-env"; shared=true)
           Pkg.add(Pkg.PackageSpec(name="GitHubActions", version="0.1"))
