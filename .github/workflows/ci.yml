@@ -61,7 +61,7 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
 
-      - uses: julia-actions/julia-buildpkg@00f9fd6b2600be0a8d80566dd4d4d2389b3468eb
+      - uses: julia-actions/julia-buildpkg@5484b0e27fa12452eb1deffe4fd40ff700c429b9
 
       - uses: ./.github/actions/julia-runtest
 
