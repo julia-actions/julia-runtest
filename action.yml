@@ -69,4 +69,4 @@ runs:
         COVERAGE: ${{ inputs.coverage }}
         FORCE_LATEST_COMPATIBLE_VERSION: ${{ inputs.force_latest_compatible_version }}
         CHECK_BOUNDS: ${{ inputs.check_bounds }}
-        COMPILED_MODUILES: ${{ inputs.compiled_modules }}
+        COMPILED_MODULES: ${{ inputs.compiled_modules }}
