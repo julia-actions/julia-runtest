@@ -32,6 +32,9 @@ inputs:
   annotate:
     description: 'Whether or not to attempt to create GitHub annotations to show test failures inline. Only effective on Julia 1.8+.'
     default: 'false'
+  compiled_modules:
+    description: 'Whether to run tests with `compiled-modules`. For possible values, refer to https://docs.julialang.org/en/v1/manual/command-line-interface/#command-line-interface'
+    default: 'yes'
 
 runs:
   using: 'composite'
@@ -66,3 +69,4 @@ runs:
         COVERAGE: ${{ inputs.coverage }}
         FORCE_LATEST_COMPATIBLE_VERSION: ${{ inputs.force_latest_compatible_version }}
         CHECK_BOUNDS: ${{ inputs.check_bounds }}
+        COMPILED_MODULES: ${{ inputs.compiled_modules }}
