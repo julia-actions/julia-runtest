@@ -45,7 +45,7 @@ jobs:
 You can add this workflow to your repository by placing it in a file called `test.yml` in the folder `.github/workflows/`. [More info here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions).
 
 Here, setting `annotate: true` causes GitHub "annotations" to appear when reviewing the PR, pointing to failing tests, if any.
-This functionality is only enabled on Julia 1.8 (even if `annotate` is set to `true`), since currently it does not work on other Julia versions (see #76).
+This functionality is only enabled on Julia 1.8 (even if `annotate` is set to `true`), since currently it does not work on other Julia versions (see [#76](https://github.com/julia-actions/julia-runtest/issues/76)).
 
 By default, `annotate` is set to false, but that may change in future releases of this action.
 ### Prefixing the Julia command
