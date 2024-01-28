@@ -11,7 +11,7 @@ An example workflow that uses this action might look like this:
 ```yaml
 name: Run tests
 
-on: 
+on:
   push:
     branches:
       - master
