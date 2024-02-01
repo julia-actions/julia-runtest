@@ -67,7 +67,7 @@ jobs:
 
       - uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38
 
-      - uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d
+      - uses: codecov/codecov-action@f30e4959ba63075080d4f7f90cacc18d9f3fafd7
         with:
           file: lcov.info
 
