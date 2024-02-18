@@ -18,6 +18,11 @@ on:
       - main
   pull_request:
 
+# needed to allow julia-actions/cache to delete old caches that it has created
+permissions:
+  actions: write
+  contents: read
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
