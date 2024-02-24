@@ -35,6 +35,9 @@ inputs:
   compiled_modules:
     description: 'Whether to run tests with `compiled-modules`. For possible values, refer to https://docs.julialang.org/en/v1/manual/command-line-interface/#command-line-interface'
     default: 'yes'
+  test_arg:
+    description: 'Argument string that is passed on to test.'
+    default: ''
 
 runs:
   using: 'composite'
@@ -70,3 +73,4 @@ runs:
         FORCE_LATEST_COMPATIBLE_VERSION: ${{ inputs.force_latest_compatible_version }}
         CHECK_BOUNDS: ${{ inputs.check_bounds }}
         COMPILED_MODULES: ${{ inputs.compiled_modules }}
+        TEST_ARG: ${{ inputs.test_arg }}
