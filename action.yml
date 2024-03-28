@@ -35,6 +35,10 @@ inputs:
   compiled_modules:
     description: 'Whether to run tests with `compiled-modules`. For possible values, refer to https://docs.julialang.org/en/v1/manual/command-line-interface/#command-line-interface'
     default: 'yes'
+  threads:
+    description: 'Value passed to the --threads flag. Unless the number of threads is specified, `--threads` arg is not passed.'
+    default: 'default'
+    required: false
 
 runs:
   using: 'composite'
@@ -54,7 +58,8 @@ runs:
       if: inputs.annotate == 'true'
     - run: |
         # The Julia command that will be executed
-        julia_cmd=( julia --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' )
+        threads_arg=$([[ "${{ inputs.threads }}" == "default" ]] && echo "" || echo "--threads=${{ inputs.threads }}" )
+        julia_cmd=( julia --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} $threads_arg -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' )
 
         # Add the prefix in front of the command if there is one
         prefix=( ${{ inputs.prefix }} )
