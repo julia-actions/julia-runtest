@@ -4,3 +4,7 @@ updates:
   directory: '/'
   schedule:
     interval: 'monthly'
+  open-pull-requests-limit: 99
+  labels:
+    - 'dependencies'
+    - 'github-actions'
