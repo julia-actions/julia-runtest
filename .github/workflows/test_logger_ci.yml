@@ -34,7 +34,7 @@ jobs:
       - name: Checkout julia-runtest
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
 
-      - uses: julia-actions/setup-julia@a1561e938c17e7aaf8236334d6d533e774c71dcd
+      - uses: julia-actions/setup-julia@f2258781c657ad9b4b88072c5eeaf9ec8c370874
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
