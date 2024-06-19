@@ -70,6 +70,9 @@ jobs:
       - uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673
         with:
           file: lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail-ci-if-error: true
+          
 
       - name: Verify that test output file exists
         run: test -f "$HOME/julia-runtest"
