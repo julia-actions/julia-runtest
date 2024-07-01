@@ -45,7 +45,7 @@ jobs:
         with:
           path: ./.github/actions/julia-runtest
 
-      - uses: julia-actions/setup-julia@3645a07f58c7f83b9f82ac8e0bb95583e69149e6
+      - uses: julia-actions/setup-julia@3645a07f58c7f83b9f82ac8e0bb95583e69149e6 # v2.2.0
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
