@@ -12,7 +12,27 @@ if parse(Bool, ENV["ANNOTATE"]) && v"1.8pre" < VERSION < v"1.9.0-beta3"
     global_logger(GitHubActionsLogger())
     include("test_logger.jl")
     pop!(LOAD_PATH)
-    TestLogger.test(; kwargs...)
+    try
+        TestLogger.test(; kwargs...)
+    catch e
+        if e isa Pkg.Types.PkgError
+            # don't show the stacktrace of the test harness because it's not useful
+            showerror(stderr, e)
+            exit(1)
+        else
+            rethrow()
+        end
+    end
 else
-    Pkg.test(; kwargs...)
+    try
+        Pkg.test(; kwargs...)
+    catch e
+        if e isa Pkg.Types.PkgError
+            # don't show the stacktrace of the test harness because it's not useful
+            showerror(stderr, e)
+            exit(1)
+        else
+            rethrow()
+        end
+    end
 end
