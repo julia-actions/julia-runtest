@@ -87,6 +87,38 @@ If you only want to add this prefix on certain builds, you can [include addition
 
 This will add the prefix `xvfb-run` to all builds where the `os` is `ubuntu-latest`.
 
+### Pass Arguments to Test Suite
+
+You can pass arguments from the workflow specification to the test script via the `test_arg` parameter.
+
+This is useful, for example, to specify separate workflows for fast and slow tests.
+
+The functionality can be incorporated as follows:
+
+```yaml
+    # ...
+    steps:
+    # ...
+      - uses: julia-actions/julia-runtest@v1
+        with:
+          test_arg: 'only_fast_tests'
+    # ...
+```
+
+The value of `test_arg` can be accessed in `runtest.jl` via the `ARGS` variable. An example for `runtest.jl` is given below.
+
+```julia
+using Test
+# ...
+
+if @isdefined(ARGS) && length(ARGS) > 0 && ARGS[1] == "only_fast_tests"
+    # run only fast tests
+    include("only_fast_tests.jl")
+else
+    # do something else
+end
+```
+
 
 ### Registry flavor preference
 
