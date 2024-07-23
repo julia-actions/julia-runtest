@@ -38,7 +38,7 @@ inputs:
   allow_reresolve:
     description: 'Whether to allow re-resolving of package versions in the test environment. Only effective on Julia 1.9+. Options: true | false. Default value: true'
     default: 'true'
-  test_arg:
+  test_args:
     description: 'Argument string that is passed on to test.'
     default: ''
 
@@ -77,4 +77,4 @@ runs:
         CHECK_BOUNDS: ${{ inputs.check_bounds }}
         COMPILED_MODULES: ${{ inputs.compiled_modules }}
         ALLOW_RERESOLVE: ${{ inputs.allow_reresolve }}
-        TEST_ARG: ${{ inputs.test_arg }}
+        TEST_ARGS: ${{ inputs.test_args }}

@@ -89,7 +89,7 @@ This will add the prefix `xvfb-run` to all builds where the `os` is `ubuntu-late
 
 ### Pass Arguments to Test Suite
 
-You can pass arguments from the workflow specification to the test script via the `test_arg` parameter.
+You can pass arguments from the workflow specification to the test script via the `test_args` parameter.
 
 This is useful, for example, to specify separate workflows for fast and slow tests.
 
@@ -101,11 +101,11 @@ The functionality can be incorporated as follows:
     # ...
       - uses: julia-actions/julia-runtest@v1
         with:
-          test_arg: 'only_fast_tests'
+          test_args: 'only_fast_tests'
     # ...
 ```
 
-The value of `test_arg` can be accessed in `runtest.jl` via the `ARGS` variable. An example for `runtest.jl` is given below.
+The value of `test_args` can be accessed in `runtest.jl` via the `ARGS` variable. An example for `runtest.jl` is given below.
 
 ```julia
 using Test

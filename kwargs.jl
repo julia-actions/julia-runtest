@@ -8,7 +8,7 @@ function kwargs(; coverage,
                   force_latest_compatible_version,
                   allow_reresolve,
                   julia_args::AbstractVector{<:AbstractString}=String[],
-                  test_arg::AbstractString="",
+                  test_args::AbstractString="",
                   )
     if coverage isa AbstractString
         coverage = parse(Bool, coverage)
@@ -58,8 +58,8 @@ function kwargs(; coverage,
         kwargs_dict[:allow_reresolve] = parse(Bool, allow_reresolve)
     end
     
-    if test_arg != "" # avoid ambiguity by empty string in test_args
-        kwargs_dict[:test_args] = [test_arg]
+    if test_args != "" # avoid ambiguity by empty string in test_args
+        kwargs_dict[:test_args] = [test_args]
     end
 
     return kwargs_dict
