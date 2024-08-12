@@ -91,7 +91,7 @@ This will add the prefix `xvfb-run` to all builds where the `os` is `ubuntu-late
 
 You can pass arguments from the workflow specification to the test script via the `test_args` parameter.
 
-This is useful, for example, to specify separate workflows for fast and slow tests.
+This is useful, for example, to specify separate workflows for fast and slow tests, or conditionally enabling quality assurance tests.
 
 The functionality can be incorporated as follows:
 
@@ -101,7 +101,7 @@ The functionality can be incorporated as follows:
     # ...
       - uses: julia-actions/julia-runtest@v1
         with:
-          test_args: 'only_fast_tests'
+          test_args: 'slow_tests "quality assurance"'
     # ...
 ```
 
@@ -111,11 +111,17 @@ The value of `test_args` can be accessed in `runtest.jl` via the `ARGS` variable
 using Test
 # ...
 
-if @isdefined(ARGS) && length(ARGS) > 0 && ARGS[1] == "only_fast_tests"
-    # run only fast tests
-    include("only_fast_tests.jl")
-else
-    # do something else
+# run fast tests by default
+include("fast_tests.jl")
+
+if @isdefined(ARGS) && length(ARGS) > 0 && ARGS[1] == "slow_tests"
+    # run slow tests
+    include("slow_tests.jl")
+end
+
+if @isdefined(ARGS) && length(ARGS) > 0 && ARGS[1] == "quality assurance"
+    # run quality assurance tests
+    include("qa.jl")
 end
 ```
 
