@@ -114,12 +114,12 @@ using Test
 # run fast tests by default
 include("fast_tests.jl")
 
-if @isdefined(ARGS) && length(ARGS) > 0 && ARGS[1] == "slow_tests"
+if "slow_tests" in ARGS
     # run slow tests
     include("slow_tests.jl")
 end
 
-if @isdefined(ARGS) && length(ARGS) > 0 && ARGS[1] == "quality assurance"
+if "quality assurance" in ARGS
     # run quality assurance tests
     include("qa.jl")
 end
