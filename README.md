@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        julia-version: ['1.6', '1', 'nightly']
+        julia-version: ['lts', '1', 'pre']
         julia-arch: [x64, x86]
         os: [ubuntu-latest, windows-latest, macOS-latest]
         exclude:
@@ -37,11 +37,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@v2
         with:
           version: ${{ matrix.julia-version }}
           arch: ${{ matrix.julia-arch }}
-      - uses: julia-actions/cache@v1
+      - uses: julia-actions/cache@v2
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
         # with:
@@ -72,7 +72,7 @@ If you only want to add this prefix on certain builds, you can [include addition
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        version: ['1.0', '1', 'nightly']
+        version: ['lts', '1', 'pre']
         arch: [x64]
         include:
           - os: ubuntu-latest
