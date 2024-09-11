@@ -5,7 +5,7 @@ kwargs = Kwargs.kwargs(; coverage=ENV["COVERAGE"],
                          allow_reresolve=ENV["ALLOW_RERESOLVE"],
                          julia_args=[string("--check-bounds=", ENV["CHECK_BOUNDS"]),
                                      string("--compiled-modules=", ENV["COMPILED_MODULES"])],
-                         test_args=ENV["TEST_ARGS"],
+                         test_args=ARGS,
                          )
 
 if parse(Bool, ENV["ANNOTATE"]) && v"1.8pre" < VERSION < v"1.9.0-beta3"
