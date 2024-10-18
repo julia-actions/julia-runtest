@@ -8,6 +8,17 @@ kwargs = Kwargs.kwargs(; coverage=ENV["COVERAGE"],
                          test_args=ARGS,
                          )
 
+kwargs_reprs = map(kv -> string(kv[1], "=", repr(kv[2])), collect(kwargs))
+kwargs_repr = join(kwargs_reprs, ", ")
+
+print("""
+│
+│ To reproduce this CI run locally run the following from the same repository state on julia version $VERSION:
+│
+│ `import Pkg; Pkg.test(;$kwargs_repr)`
+│
+""")
+
 if parse(Bool, ENV["ANNOTATE"]) && v"1.8pre" < VERSION < v"1.9.0-beta3"
     push!(LOAD_PATH, "@tests-logger-env") # access dependencies
     using GitHubActions, Logging
