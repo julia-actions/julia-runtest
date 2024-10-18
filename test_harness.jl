@@ -13,8 +13,7 @@ kwargs_repr = join(kwargs_reprs, ", ")
 
 print("""
 │
-│ To reproduce this CI run locally run the following from the
-│ same repository state on julia version $VERSION:
+│ To reproduce this CI run locally run the following from the same repository state on julia version $VERSION:
 │
 │ `import Pkg; Pkg.test(;$kwargs_repr)`
 │
