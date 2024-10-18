@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout Example.jl
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
         with:
           repository: julia-actions/Example.jl
 
@@ -41,7 +41,7 @@ jobs:
         shell: bash
 
       - name: Checkout julia-runtest
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
         with:
           path: ./.github/actions/julia-runtest
 
