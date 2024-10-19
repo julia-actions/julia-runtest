@@ -57,8 +57,10 @@ function kwargs(; coverage,
     if VERSION >= v"1.9"
         kwargs_dict[:allow_reresolve] = parse(Bool, allow_reresolve)
     end
-    
-    kwargs_dict[:test_args] = test_args
+
+    if !isempty(test_args)
+        kwargs_dict[:test_args] = test_args
+    end
 
     return kwargs_dict
 end
