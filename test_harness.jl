@@ -4,7 +4,8 @@ kwargs = Kwargs.kwargs(; coverage=ENV["COVERAGE"],
                          force_latest_compatible_version=ENV["FORCE_LATEST_COMPATIBLE_VERSION"],
                          allow_reresolve=ENV["ALLOW_RERESOLVE"],
                          julia_args=[string("--check-bounds=", ENV["CHECK_BOUNDS"]),
-                                     string("--compiled-modules=", ENV["COMPILED_MODULES"])],
+                                     string("--compiled-modules=", ENV["COMPILED_MODULES"]),
+                                     string("--depwarn=", ENV["DEPWARN"]),],
                          test_args=ARGS,
                          )
 

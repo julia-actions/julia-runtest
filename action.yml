@@ -77,3 +77,4 @@ runs:
         CHECK_BOUNDS: ${{ inputs.check_bounds }}
         COMPILED_MODULES: ${{ inputs.compiled_modules }}
         ALLOW_RERESOLVE: ${{ inputs.allow_reresolve }}
+        DEPWARN: ${{ inputs.depwarn }}
