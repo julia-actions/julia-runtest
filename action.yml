@@ -60,7 +60,7 @@ runs:
       if: inputs.annotate == 'true'
     - run: |
         # The Julia command that will be executed
-        julia_cmd=( julia --color=yes --depwarn=${{ inputs.depwarn }} --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
+        julia_cmd=( julia --color=yes --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
 
         # Add the prefix in front of the command if there is one
         prefix=( ${{ inputs.prefix }} )
