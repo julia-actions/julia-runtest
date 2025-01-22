@@ -5,6 +5,8 @@ kwargs = Kwargs.kwargs(; coverage=ENV["COVERAGE"],
                          allow_reresolve=ENV["ALLOW_RERESOLVE"],
                          julia_args=[string("--check-bounds=", ENV["CHECK_BOUNDS"]),
                                      string("--compiled-modules=", ENV["COMPILED_MODULES"]),
+                                     # Needs to be done via `julia_args` to ensure `depwarn: no` is respected:
+                                     # https://github.com/JuliaLang/Pkg.jl/pull/1763#discussion_r406819660
                                      string("--depwarn=", ENV["DEPWARN"]),],
                          test_args=ARGS,
                          )
