@@ -7,7 +7,8 @@ kwargs = Kwargs.kwargs(; coverage=ENV["COVERAGE"],
                                      string("--compiled-modules=", ENV["COMPILED_MODULES"]),
                                      # Needs to be done via `julia_args` to ensure `depwarn: no` is respected:
                                      # https://github.com/JuliaLang/Pkg.jl/pull/1763#discussion_r406819660
-                                     string("--depwarn=", ENV["DEPWARN"]),],
+                                     string("--depwarn=", ENV["DEPWARN"]),
+                                     string("--optimize=", ENV["OPTIMIZE"]),],
                          test_args=ARGS,
                          )
 
