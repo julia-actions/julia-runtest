@@ -41,6 +41,9 @@ inputs:
   test_args:
     description: 'Arguments string that is passed on to test.'
     default: ''
+  optimize:
+    description: 'Set the optimization level for the julia process being run during tests. Default value: 3'
+    default: '2'
 
 runs:
   using: 'composite'
@@ -78,3 +81,4 @@ runs:
         COMPILED_MODULES: ${{ inputs.compiled_modules }}
         ALLOW_RERESOLVE: ${{ inputs.allow_reresolve }}
         DEPWARN: ${{ inputs.depwarn }}
+        OPTIMIZE: ${{ inputs.optimize }}
