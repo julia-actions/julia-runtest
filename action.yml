@@ -41,6 +41,10 @@ inputs:
   test_args:
     description: 'Arguments string that is passed on to test.'
     default: ''
+  git_cli:
+    description: 'Determine if Pkg uses the cli git executable (Julia >= 1.7). Might be necessary for more complicated SSH setups.
+                  Options: true | false. Default : false'
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -78,3 +82,4 @@ runs:
         COMPILED_MODULES: ${{ inputs.compiled_modules }}
         ALLOW_RERESOLVE: ${{ inputs.allow_reresolve }}
         DEPWARN: ${{ inputs.depwarn }}
+        JULIA_PKG_USE_CLI_GIT: ${{ inputs.git_cli }}
