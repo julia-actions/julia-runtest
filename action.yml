@@ -66,9 +66,39 @@ runs:
         prefix=( ${{ inputs.prefix }} )
         [[ -n ${prefix[*]} ]] && julia_cmd=( "${prefix[@]}" "${julia_cmd[@]}" )
 
-        # Run the Julia command
+        # Determine which signal to use for diagnostics based on OS
+        if [[ "$(uname -s)" == "Darwin" ]] || [[ "$(uname -s)" == *"BSD"* ]]; then
+          info_signal="INFO"
+        else
+          info_signal="USR1"
+        fi
+
+        # Set up signal handler to send diagnostic signal when we receive SIGTERM
+        # (which GitHub Actions sends on timeout/cancellation)
+        trap_handler() {
+          echo "::warning::Timeout/cancellation detected - sending SIG${info_signal} to Julia process for diagnostic output"
+          if kill -0 "$julia_pid" 2>/dev/null; then
+            kill -s "$info_signal" "$julia_pid" 2>/dev/null || true
+            # Give Julia a moment to print diagnostics before we get killed
+            sleep 2
+          fi
+          # Re-send SIGTERM to Julia to ensure it terminates
+          kill -TERM "$julia_pid" 2>/dev/null || true
+          wait "$julia_pid" 2>/dev/null || true
+          exit 124  # Standard timeout exit code
+        }
+        trap trap_handler SIGTERM SIGINT
+
+        # Run the Julia command in the background so we can handle signals
         echo "::debug::Executing Julia: ${julia_cmd[*]}"
-        "${julia_cmd[@]}"
+        "${julia_cmd[@]}" &
+        julia_pid=$!
+
+        # Wait for Julia to complete
+        wait "$julia_pid"
+        exit_code=$?
+        
+        exit $exit_code
       shell: bash
       env:
         ANNOTATE: ${{ inputs.annotate }}
