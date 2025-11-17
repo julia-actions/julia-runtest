@@ -25,10 +25,16 @@ if haskey(ENV, "GITHUB_SHA") && get(ENV, "GITHUB_EVENT_NAME", "") == "pull_reque
 
         # Check if there's any difference between the merge commit and the PR head
         # In GitHub Actions, HEAD^2 is the PR head (second parent of merge commit)
-        # Compare tree hashes to check if content actually differs
-        merge_tree = chomp(read(`git rev-parse HEAD:`, String))
-        pr_tree = chomp(read(`git rev-parse HEAD^2:`, String))
-        has_diff = merge_tree != pr_tree
+        # First check if HEAD^2 exists (i.e., this is actually a merge commit)
+        if success(`git rev-parse --verify --quiet HEAD^2`)
+            # Compare tree hashes to check if content actually differs
+            merge_tree = chomp(read(`git rev-parse HEAD:`, String))
+            pr_tree = chomp(read(`git rev-parse HEAD^2:`, String))
+            has_diff = merge_tree != pr_tree
+        else
+            # Not a merge commit, so no difference to report
+            has_diff = false
+        end
 
         if has_diff
             base_branch = isempty(base_branch_name) ? "the base branch" : "'$base_branch_name'"
