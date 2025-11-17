@@ -7,17 +7,24 @@ on:
       - "master"
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
     strategy:
       fail-fast: false
       matrix:
         version:
           - "1.0"
+          - "lts"
           - "1" # automatically expands to the latest stable 1.x release of Julia
-          - nightly
+          - "pre"
+          - "nightly"
         os:
           - ubuntu-latest
           - macOS-latest
@@ -25,10 +32,22 @@ jobs:
         arch:
           - x64
           - x86
+          - aarch64
         # 32-bit Julia binaries are not available on macOS
+        # macOS runners use Apple Silicon (ARM64)
         exclude:
           - os: macOS-latest
             arch: x86
+          - os: macOS-latest
+            arch: x64
+          - os: ubuntu-latest
+            arch: aarch64
+          - os: windows-latest
+            arch: aarch64
+          # Julia 1.0 didn't support ARM64
+          - os: macOS-latest
+            arch: aarch64
+            version: "1.0"
 
     steps:
       - name: Checkout Example.jl
@@ -63,7 +82,7 @@ jobs:
           files: lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
           fail-ci-if-error: true
-          
+
 
       - name: Verify that test output file exists
         run: test -f "$HOME/julia-runtest"
