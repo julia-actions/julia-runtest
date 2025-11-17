@@ -16,8 +16,10 @@ jobs:
       matrix:
         version:
           - "1.6"
+          - "lts"
           - "1" # automatically expands to the latest stable 1.x release of Julia
-          - nightly
+          - "pre"
+          - "nightly"
         os:
           - ubuntu-latest
           - macOS-latest
@@ -37,6 +39,10 @@ jobs:
             arch: aarch64
           - os: windows-latest
             arch: aarch64
+          # Julia 1.6 didn't support ARM64
+          - os: macOS-latest
+            arch: aarch64
+            version: "1.6"
 
     steps:
       - name: Checkout julia-runtest

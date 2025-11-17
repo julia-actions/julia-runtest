@@ -39,6 +39,10 @@ jobs:
             arch: aarch64
           - os: windows-latest
             arch: aarch64
+          # Julia 1.0 didn't support ARM64
+          - os: macOS-latest
+            arch: aarch64
+            version: "1.0"
 
     steps:
       - name: Checkout Example.jl
