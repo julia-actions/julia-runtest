@@ -25,10 +25,18 @@ jobs:
         arch:
           - x64
           - x86
+          - aarch64
         # 32-bit Julia binaries are not available on macOS
+        # macOS runners use Apple Silicon (ARM64)
         exclude:
           - os: macOS-latest
             arch: x86
+          - os: macOS-latest
+            arch: x64
+          - os: ubuntu-latest
+            arch: aarch64
+          - os: windows-latest
+            arch: aarch64
 
     steps:
       - name: Checkout julia-runtest
