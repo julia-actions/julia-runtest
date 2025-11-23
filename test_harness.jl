@@ -28,8 +28,8 @@ if haskey(ENV, "GITHUB_SHA") && get(ENV, "GITHUB_EVENT_NAME", "") == "pull_reque
         # First check if HEAD^2 exists (i.e., this is actually a merge commit)
         if success(`git rev-parse --verify --quiet HEAD^2`)
             # Compare tree hashes to check if content actually differs
-            merge_tree = chomp(read(`git rev-parse HEAD:`, String))
-            pr_tree = chomp(read(`git rev-parse HEAD^2:`, String))
+            merge_tree = chomp(read(`git rev-parse HEAD^{tree}`, String))
+            pr_tree = chomp(read(`git rev-parse HEAD^2^{tree}`, String))
             has_diff = merge_tree != pr_tree
         else
             # Not a merge commit, so no difference to report
