@@ -64,7 +64,7 @@ runs:
         [[ "${{ runner.os }}" == "Windows" ]] && julia_bin=julia.exe
 
         # The Julia command that will be executed
-        julia_cmd=( "${julia_bin}" --color=yes --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
+        julia_cmd=( "${julia_bin:?}" --color=yes --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
 
         # Add the prefix in front of the command if there is one
         prefix=( ${{ inputs.prefix }} )
