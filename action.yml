@@ -58,7 +58,8 @@ runs:
         end
       shell: julia --color=yes {0}
       if: inputs.annotate == 'true'
-    - run: |
+    - name: Run the package tests
+      run: |
         # On Windows the executable is julia.exe, elsewhere it is julia
         julia_bin=julia
         [[ "${{ runner.os }}" == "Windows" ]] && julia_bin=julia.exe
