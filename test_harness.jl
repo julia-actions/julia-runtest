@@ -1,4 +1,11 @@
 import Pkg
+
+# JULIA_PKG_USE_CLI_GIT is already set by the action for Julia >= 1.7
+# Just provide a notice if it's set but Julia version doesn't support it
+if VERSION < v"1.7-" && haskey(ENV, "JULIA_PKG_USE_CLI_GIT") && parse(Bool, ENV["JULIA_PKG_USE_CLI_GIT"]) == true
+    printstyled("::notice::JULIA_PKG_USE_CLI_GIT requires Julia >= 1.7. Using default LibGit2 git-interface instead!\n"; color = :yellow)
+end
+
 include("kwargs.jl")
 kwargs = Kwargs.kwargs(; coverage=ENV["COVERAGE"],
                          force_latest_compatible_version=ENV["FORCE_LATEST_COMPATIBLE_VERSION"],
