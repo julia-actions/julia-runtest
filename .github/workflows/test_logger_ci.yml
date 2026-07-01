@@ -7,17 +7,24 @@ on:
       - "master"
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
     strategy:
       fail-fast: false
       matrix:
         version:
           - "1.6"
+          - "lts"
           - "1" # automatically expands to the latest stable 1.x release of Julia
-          - nightly
+          - "pre"
+          - "nightly"
         os:
           - ubuntu-latest
           - macOS-latest
@@ -25,20 +32,32 @@ jobs:
         arch:
           - x64
           - x86
+          - aarch64
         # 32-bit Julia binaries are not available on macOS
+        # macOS runners use Apple Silicon (ARM64)
         exclude:
           - os: macOS-latest
             arch: x86
+          - os: macOS-latest
+            arch: x64
+          - os: ubuntu-latest
+            arch: aarch64
+          - os: windows-latest
+            arch: aarch64
+          # Julia 1.6 didn't support ARM64
+          - os: macOS-latest
+            arch: aarch64
+            version: "1.6"
 
     steps:
       - name: Checkout julia-runtest
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
       - uses: julia-actions/setup-julia@5c9647d97b78a5debe5164e9eec09d653d29bd71 # v2.6.1
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
 
-      - uses: julia-actions/cache@2b1bf4d8a138668ac719ea7ca149b53ed8d8401e # v2.0.7
+      - uses: julia-actions/cache@d10a6fd8f31b12404a54613ebad242900567f2b9 # v2.1.0
 
       - run: julia --color=yes --check-bounds=yes test_logger_tests.jl

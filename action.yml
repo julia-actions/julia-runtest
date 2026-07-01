@@ -49,10 +49,14 @@ runs:
   using: 'composite'
   steps:
     - name: Set and export registry flavor preference
-      run: echo "JULIA_PKG_SERVER_REGISTRY_PREFERENCE=${JULIA_PKG_SERVER_REGISTRY_PREFERENCE:-eager}" >> ${GITHUB_ENV}
+      run: |
+        # Set and export registry flavor preference
+        echo "JULIA_PKG_SERVER_REGISTRY_PREFERENCE=${JULIA_PKG_SERVER_REGISTRY_PREFERENCE:-eager}" >> ${GITHUB_ENV}
       shell: bash
     - name: Install dependencies in their own (shared) environment
       run: |
+        # Install dependencies in their own (shared) environment
+
         # Functionality only currently works on a narrow range of Julia versions... see #76
         if v"1.8pre" < VERSION < v"1.9.0-beta3"
           using Pkg
@@ -61,9 +65,16 @@ runs:
         end
       shell: julia --color=yes {0}
       if: inputs.annotate == 'true'
-    - run: |
+    - name: Run the package tests
+      run: |
+        # Run the package tests
+
+        # On Windows the executable is julia.exe, elsewhere it is julia
+        julia_bin=julia
+        [[ "${{ runner.os }}" == "Windows" ]] && julia_bin=julia.exe
+
         # The Julia command that will be executed
-        julia_cmd=( julia --color=yes --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
+        julia_cmd=( "${julia_bin:?}" --color=yes --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
 
         # Add the prefix in front of the command if there is one
         prefix=( ${{ inputs.prefix }} )
