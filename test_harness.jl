@@ -1,13 +1,18 @@
 import Pkg
 include("kwargs.jl")
+julia_args = [string("--check-bounds=", ENV["CHECK_BOUNDS"]),
+              string("--compiled-modules=", ENV["COMPILED_MODULES"]),
+              # Needs to be done via `julia_args` to ensure `depwarn: no` is respected:
+              # https://github.com/JuliaLang/Pkg.jl/pull/1763#discussion_r406819660
+              string("--depwarn=", ENV["DEPWARN"])]
+# Only set the optimization level if requested, otherwise defer to the Julia default
+if !isempty(ENV["OPTIMIZE"])
+    push!(julia_args, string("--optimize=", ENV["OPTIMIZE"]))
+end
 kwargs = Kwargs.kwargs(; coverage=ENV["COVERAGE"],
                          force_latest_compatible_version=ENV["FORCE_LATEST_COMPATIBLE_VERSION"],
                          allow_reresolve=ENV["ALLOW_RERESOLVE"],
-                         julia_args=[string("--check-bounds=", ENV["CHECK_BOUNDS"]),
-                                     string("--compiled-modules=", ENV["COMPILED_MODULES"]),
-                                     # Needs to be done via `julia_args` to ensure `depwarn: no` is respected:
-                                     # https://github.com/JuliaLang/Pkg.jl/pull/1763#discussion_r406819660
-                                     string("--depwarn=", ENV["DEPWARN"]),],
+                         julia_args=julia_args,
                          test_args=ARGS,
                          )
 
