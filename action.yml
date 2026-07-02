@@ -41,6 +41,9 @@ inputs:
   test_args:
     description: 'Arguments string that is passed on to test.'
     default: ''
+  optimize:
+    description: 'Set the optimization level for the julia process being run during tests. Options: 0 | 1 | 2 | 3. Default: unset (uses the Julia default).'
+    default: ''
 
 runs:
   using: 'composite'
@@ -70,8 +73,12 @@ runs:
         julia_bin=julia
         [[ "${{ runner.os }}" == "Windows" ]] && julia_bin=julia.exe
 
+        # Optionally set the optimization level (empty means use the Julia default)
+        opt_flag=()
+        [[ -n "${OPTIMIZE}" ]] && opt_flag=( "--optimize=${OPTIMIZE}" )
+
         # The Julia command that will be executed
-        julia_cmd=( "${julia_bin:?}" --color=yes --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
+        julia_cmd=( "${julia_bin:?}" --color=yes --inline=${{ inputs.inline }} "${opt_flag[@]}" --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
 
         # Add the prefix in front of the command if there is one
         prefix=( ${{ inputs.prefix }} )
@@ -89,3 +96,4 @@ runs:
         COMPILED_MODULES: ${{ inputs.compiled_modules }}
         ALLOW_RERESOLVE: ${{ inputs.allow_reresolve }}
         DEPWARN: ${{ inputs.depwarn }}
+        OPTIMIZE: ${{ inputs.optimize }}
