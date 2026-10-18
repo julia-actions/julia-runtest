@@ -44,6 +44,9 @@ inputs:
   optimize:
     description: 'Set the optimization level for the julia process being run during tests. Options: 0 | 1 | 2 | 3. Default: unset (uses the Julia default).'
     default: ''
+  checkbounds_pkgimages:
+    description: 'Whether to download the stdlib package images for `--check-bounds=yes` that are distributed separately since Julia 1.14, instead of precompiling them. Only effective when `check_bounds` is `yes`. Options: true | false. Default value: true.'
+    default: 'true'
 
 runs:
   using: 'composite'
@@ -65,6 +68,11 @@ runs:
         end
       shell: julia --color=yes {0}
       if: inputs.annotate == 'true'
+    - name: Install bounds-checked stdlib package images
+      id: checkbounds
+      run: include(joinpath(ENV["GITHUB_ACTION_PATH"], "checkbounds_pkgimages.jl"))
+      shell: julia --color=yes --startup-file=no {0}
+      if: inputs.check_bounds == 'yes' && inputs.checkbounds_pkgimages == 'true'
     - name: Run the package tests
       run: |
         # Run the package tests
@@ -79,6 +87,9 @@ runs:
 
         # The Julia command that will be executed
         julia_cmd=( "${julia_bin:?}" --color=yes --inline=${{ inputs.inline }} "${opt_flag[@]}" --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
+
+        # Use the separately downloaded bounds-checked stdlib package images, if any
+        [[ -n "${CHECKBOUNDS_DEPOT_PATH}" ]] && export JULIA_DEPOT_PATH="${CHECKBOUNDS_DEPOT_PATH}"
 
         # Add the prefix in front of the command if there is one
         prefix=( ${{ inputs.prefix }} )
@@ -97,3 +108,4 @@ runs:
         ALLOW_RERESOLVE: ${{ inputs.allow_reresolve }}
         DEPWARN: ${{ inputs.depwarn }}
         OPTIMIZE: ${{ inputs.optimize }}
+        CHECKBOUNDS_DEPOT_PATH: ${{ steps.checkbounds.outputs.depot_path }}
