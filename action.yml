@@ -44,10 +44,25 @@ inputs:
   optimize:
     description: 'Set the optimization level for the julia process being run during tests. Options: 0 | 1 | 2 | 3. Default: unset (uses the Julia default).'
     default: ''
+  ignore-no-cache:
+    description: 'Whether to ignore if there appears to be no depot caching. Silences an action notice recommending `julia-actions/cache`. Options: true | false. Default value: false.'
+    default: 'false'
 
 runs:
   using: 'composite'
   steps:
+    - name: Check for depot caching
+      run: |
+        # Check for depot caching
+
+        # julia-actions/cache creates the depot even on a cache miss, so a missing depot means it did not run
+        if !isdir(DEPOT_PATH[1])
+            println("::notice title=[julia-runtest] Caching of the julia depot was not detected::",
+                    "Consider using `julia-actions/cache` to speed up runs https://github.com/julia-actions/cache ",
+                    "To ignore, set input `ignore-no-cache: true`")
+        end
+      shell: julia --color=yes --startup-file=no {0}
+      if: inputs.ignore-no-cache != 'true'
     - name: Set and export registry flavor preference
       run: |
         # Set and export registry flavor preference
