@@ -126,6 +126,11 @@ end
 ```
 
 
+### Depot caching notice
+
+If the Julia depot does not exist when this action starts, it shows a notice recommending
+[`julia-actions/cache`](https://github.com/julia-actions/cache). Set `ignore-no-cache: true` to silence it.
+
 ### Registry flavor preference
 
 This actions defines (and exports for subsequent steps of the workflow) the
